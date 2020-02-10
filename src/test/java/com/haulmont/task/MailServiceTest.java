@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 public class MailServiceTest {
