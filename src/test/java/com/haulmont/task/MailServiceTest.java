@@ -10,7 +10,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 public class MailServiceTest {
 
     private MailSender mailSender = Mockito.mock(MailSender.class);
-    private MessageRepository messageRepository = Mockito.mock(MessageRepository.class);
+    private MessageRepository messageRepository = Mockito.spy(MessageRepository.class);
     private Message message;
     private MailService mailService;
 
@@ -60,5 +60,11 @@ public class MailServiceTest {
     public void wasUsedTest() {
         mailService.sendMessage(message);
         Mockito.verify(mailSender).sendMessage(anyString(), anyString(), anyString(), anyString());
+    }
+
+    @Test
+    public void removeMessageTest() {
+        mailService.removeMessage(message);
+        assertEquals(Status.REMOVED, message.getStatus());
     }
 }
