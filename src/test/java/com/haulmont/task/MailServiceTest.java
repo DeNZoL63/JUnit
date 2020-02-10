@@ -21,13 +21,13 @@ public class MailServiceTest {
         Person personTo = new Person();
         personTo.setEmail("getter@mail.ru");
 
-        message = new Message("testSubject", personFrom, personTo, "testText");
+        message = messageRepository.addMessage(personFrom, personTo,"testSubject","testText");
         mailService = new MailService(mailSender, messageRepository);
     }
 
     @Test
     public void simplePositiveTest() {
-        assertNull(message.getStatus());
+        assertEquals(Status.NEW, message.getStatus());
         Mockito
                 .when(mailSender.sendMessage(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(true);
@@ -39,7 +39,7 @@ public class MailServiceTest {
 
     @Test
     public void simpleNegativeTest() {
-        assertNull(message.getStatus());
+        assertEquals(Status.NEW, message.getStatus());
         boolean result = mailService.sendMessage(message);
         assertFalse(result);
         assertEquals(Status.ERROR, message.getStatus());
@@ -64,7 +64,16 @@ public class MailServiceTest {
 
     @Test
     public void removeMessageTest() {
+        setUpRepository();
         mailService.removeMessage(message);
         assertEquals(Status.REMOVED, message.getStatus());
+    }
+
+    private void setUpRepository() {
+        Mockito.doAnswer(invocation -> {
+            Message message = invocation.getArgument(0);
+            message.setStatus(Status.REMOVED);
+            return null;
+        }).when(messageRepository).removeMessage(message);
     }
 }
