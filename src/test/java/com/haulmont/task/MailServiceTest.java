@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 import static org.mockito.ArgumentMatchers.anyString;
 
 public class MailServiceTest {
@@ -26,18 +26,27 @@ public class MailServiceTest {
     }
 
     @Test
-    public void simpleTest() {
+    public void simplePositiveTest() {
+        assertNull(message.getStatus());
         Mockito
                 .when(mailSender.sendMessage(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(true);
 
         boolean result = mailService.sendMessage(message);
         assertTrue(result);
+        assertEquals(Status.DELIVERED, message.getStatus());
+    }
+
+    @Test
+    public void simpleNegativeTest() {
+        assertNull(message.getStatus());
+        boolean result = mailService.sendMessage(message);
+        assertFalse(result);
+        assertEquals(Status.ERROR, message.getStatus());
     }
 
     @Test
     public void argumentsTest() {
-
         Mockito
                 .when(mailSender.sendMessage(message.getFrom().getEmail(), message.getTo().getEmail(),
                         message.getSubject(), message.getText()))
