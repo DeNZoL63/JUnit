@@ -1,21 +1,19 @@
 package com.haulmont.task;
 
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 
-import static org.junit.Assert.assertTrue;
+import static junit.framework.TestCase.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 public class MailServiceTest {
-    @Mock
-    private MailSender mailSender;
-    @Spy
-    private MessageRepository messageRepository;
+
+    private MailSender mailSender = Mockito.mock(MailSender.class);
+    private MessageRepository messageRepository = Mockito.mock(MessageRepository.class);
 
     @Test
-    public void argumentsTest() {
+    public void simpleTest() {
         Person personFrom = new Person();
         personFrom.setEmail("sender@mail.ru");
         Person personTo = new Person();
@@ -23,10 +21,9 @@ public class MailServiceTest {
         Message message = new Message("", personFrom, personTo, "");
 
         MailService mailService = new MailService(mailSender, messageRepository);
-        Mockito.when(mailSender.sendMessage(any(), any(), any(), any())).thenReturn(true);
+        Mockito.when(mailSender.sendMessage(anyString(), anyString(), anyString(), anyString())).thenReturn(true);
 
         boolean result = mailService.sendMessage(message);
-
         assertTrue(result);
     }
 }
