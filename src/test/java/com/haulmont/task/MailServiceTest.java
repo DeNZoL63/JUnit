@@ -47,4 +47,9 @@ public class MailServiceTest {
         assertTrue(result);
     }
 
+    @Test
+    public void wasUsedTest() {
+        mailService.sendMessage(message);
+        Mockito.verify(mailSender).sendMessage(anyString(), anyString(), anyString(), anyString());
+    }
 }
